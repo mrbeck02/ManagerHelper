@@ -1,12 +1,15 @@
-﻿namespace ManagerHelper;
+﻿using ManagerHelper.ViewModels;
+
+namespace ManagerHelper;
 
 public partial class MainPage : ContentPage
 {
 	int count = 0;
 
-	public MainPage()
+	public MainPage(IMainViewModel mainViewModel)
 	{
 		InitializeComponent();
+		BindingContext = mainViewModel;
 	}
 
 	private void OnCounterClicked(object sender, EventArgs e)
