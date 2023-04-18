@@ -1,12 +1,19 @@
-﻿using ManagerHelper.ViewModels.Support;
+﻿using ManagerHelper.CsvImporter;
+using ManagerHelper.DAL;
+using ManagerHelper.Data;
+using ManagerHelper.Data.Entities;
+using ManagerHelper.ViewModels.Support;
+using Microsoft.EntityFrameworkCore;
+using System.Windows.Input;
 
 namespace ManagerHelper.ViewModels
 {
     public class MainViewModel : PropertyChangedNotifier, IDisposable, IMainViewModel
     {
-        //private IStatisticsCsvImporter _statisticsCsvImporter;
-        //private IDbContextFactory<DataContext> _contextFactory;
-        //private IStatisticsCsvReader _reader;
+        private IStatisticsCsvImporter _statisticsCsvImporter;
+        private IDbContextFactory<DataContext> _contextFactory;
+        private IStatisticsCsvReader _reader;
+        private IAlertService _alertService;
 
         #region Properties
 
@@ -22,125 +29,98 @@ namespace ManagerHelper.ViewModels
 
                 _csvPath = value;
                 OnPropertyChanged(nameof(CsvPath));
+                refreshCanExecute(ImportCsvCommand);
             }
         }
 
-        //private ObservableCollection<ComboBoxItemViewModel<Developer>> _developerOptions;
-        //private ComboBoxItemViewModel<Developer> _selectedDeveloperOption;
+        private List<Developer> _developerOptions;
 
-        //public ObservableCollection<ComboBoxItemViewModel<Developer>> DeveloperOptions
-        //{
-        //    get => _developerOptions;
-        //    private set
-        //    {
-        //        _developerOptions = value;
-        //        OnPropertyChanged(nameof(DeveloperOptions));
-        //    }
-        //}
+        public List<Developer> DeveloperOptions
+        {
+            get => _developerOptions;
+            private set
+            {
+                _developerOptions = value;
+                OnPropertyChanged(nameof(DeveloperOptions));
+            }
+        }
 
-        //public ComboBoxItemViewModel<Developer> SelectedDeveloperOption
-        //{
-        //    get => _selectedDeveloperOption;
-        //    set
-        //    {
-        //        var origValue = _selectedDeveloperOption;
-
-        //        var montageSelected = false;
-
-        //        if (_developerOptions.Count > 0)
-        //        {
-        //            montageSelected = _developerOptions.Any(o => o.IsSelected);
-        //        }
-
-        //        // if we're setting the developer option to the same developer, skip it.
-        //        if (value != null && _selectedDeveloperOption != null && value.Value == _selectedDeveloperOption.Value && montageSelected)
-        //            return;
-
-
-        //        if (value == null)
-        //        {
-        //            OnPropertyChanged(nameof(SelectedDeveloperOption));
-        //            return;
-        //        }
-
-        //        foreach (var item in _developerOptions)
-        //        {
-        //            item.IsSelected = false;
-        //        }
-
-        //        _selectedDeveloperOption = value;
-        //        _selectedDeveloperOption.IsSelected = true;
-
-        //        OnPropertyChanged(nameof(SelectedDeveloperOption));
-        //    }
-        //}
+        public Developer SelectedDeveloperOption { get; set; }
 
         #endregion
 
         #region Commands
         // MAUI Commands: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/data-binding/commanding?view=net-maui-7.0
 
-        //public RelayCommand _importCsvCommand;
-
-
-        //public RelayCommand ImportCsvCommand => _importCsvCommand ??= new RelayCommand(importCsvCommand);
-
-        //private void importCsvCommand(object obj)
-        //{
-        //    try
-        //    {
-        //        var entries = _reader.ReadStatistics(CsvPath);
-
-        //        if (entries.Count == 0) { 
-        //            MessageBox.Show($"No entries found in file {CsvPath}", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-        //            return;
-        //        }
-
-        //        _statisticsCsvImporter.ImportData(entries, SelectedDeveloperOption.Value, new UnitOfWork(_contextFactory.CreateDbContext()));
-        //        MessageBox.Show($"{entries.Count} entries imported.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        //    }
-        //}
+        public ICommand ImportCsvCommand { get; set; }
 
         #endregion
 
-        //public MainViewModel(IDbContextFactory<DataContext> contextFactory,
-        //    IStatisticsCsvReader reader,
-        //    IStatisticsCsvImporter statisticsCsvImporter)
-        //{
-        //    _statisticsCsvImporter = statisticsCsvImporter;
-        //    _reader = reader;
-        //    _contextFactory = contextFactory;
+        public MainViewModel(IDbContextFactory<DataContext> contextFactory,
+            IStatisticsCsvReader reader,
+            IStatisticsCsvImporter statisticsCsvImporter,
+            IAlertService alertService)
+        {
+            _statisticsCsvImporter = statisticsCsvImporter;
+            _reader = reader;
+            _contextFactory = contextFactory;
+            _alertService = alertService;
 
-        //    initializeViewModel();
-        //}
+            initializeViewModel();
+        }
 
-        //private void initializeViewModel()
-        //{
-        //    _developerOptions = createDeveloperOptions();
+        private void initializeViewModel()
+        {
+            _developerOptions = createDeveloperOptions();
 
-        //    if (_developerOptions.Count > 0)
-        //    {
-        //        _selectedDeveloperOption = _developerOptions[0];
-        //        _selectedDeveloperOption.IsSelected = true;
-        //    }
-        //}
+            if (_developerOptions.Count > 0)
+            {
+                SelectedDeveloperOption = _developerOptions[0];
+            }
 
-        //protected ObservableCollection<ComboBoxItemViewModel<Developer>> createDeveloperOptions()
-        //{
-        //    var unitOfWork = new UnitOfWork(_contextFactory.CreateDbContext());
-        //    var allOptions = new List<ComboBoxItemViewModel<Developer>>();
+            createImportCsvCommand();
+        }
 
-        //    var developers = unitOfWork.DeveloperRepository.Get();
-        //    allOptions.AddRange(developers.Select(m => new ComboBoxItemViewModel<Developer>(m, m.GetFullName())));
-        //    allOptions.Sort();
+        private void createImportCsvCommand()
+        {
+            ImportCsvCommand = new Command(
+                execute: async () =>
+                {
+                    try
+                    {
+                        var entries = _reader.ReadStatistics(CsvPath);
 
-        //    return new ObservableCollection<ComboBoxItemViewModel<Developer>>(
-        //        allOptions.ToList());
-        //}
+                        if (entries.Count == 0)
+                        {
+                            _alertService.ShowAlert("Error", $"No entries found in file {CsvPath}");
+                            return;
+                        }
+
+                        _statisticsCsvImporter.ImportData(entries, SelectedDeveloperOption, new UnitOfWork(_contextFactory.CreateDbContext()));
+                        _alertService.ShowAlert("Success", $"{entries.Count} entries imported.");
+                    }
+                    catch (Exception ex)
+                    {
+                        _alertService.ShowAlert("Error", ex.Message);
+                    }
+                    refreshCanExecute(ImportCsvCommand);
+                },
+                canExecute: () =>
+                {
+                    return File.Exists(_csvPath);
+                });
+
+        }
+
+        protected List<Developer> createDeveloperOptions()
+        {
+            var unitOfWork = new UnitOfWork(_contextFactory.CreateDbContext());
+
+            var developers = unitOfWork.DeveloperRepository.Get().ToList();
+            developers.Sort((a, b) => a.LastName.CompareTo(b.LastName));
+
+            return developers;
+        }
 
         private bool disposedValue;
 

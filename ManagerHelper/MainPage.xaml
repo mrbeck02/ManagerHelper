@@ -9,6 +9,26 @@
             Padding="30,0"
             VerticalOptions="Center">
 
+            <Picker 
+                Title = "Developer"
+                FontSize="16"
+                VerticalOptions="CenterAndExpand"
+                ItemsSource="{Binding DeveloperOptions}"
+                ItemDisplayBinding="{Binding FullName}"
+                SelectedItem="{Binding SelectedDeveloperOption} "/>
+
+            <Label
+                Text="File"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="16" />
+
+            <Entry FontSize="16"
+                   Text="{Binding CsvPath}" />
+
+            <Button
+                Text="Import"
+                Command="{Binding ImportCsvCommand}" />
+
             <Image
                 Source="dotnet_bot.png"
                 SemanticProperties.Description="Cute dot net bot waving hi to you!"
@@ -34,6 +54,9 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
+
+            <Label Text="{Binding CsvPath}" />
+            
 
         </VerticalStackLayout>
     </ScrollView>

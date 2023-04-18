@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagerHelper", "ManagerHelper\ManagerHelper.csproj", "{F60A8E73-8354-45D8-B4DF-3B5C6E8BC8D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerHelperTests", "ManagerHelperTests\ManagerHelperTests.csproj", "{02790542-D92E-4352-909C-4B878899284F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagerHelperTests", "ManagerHelperTests\ManagerHelperTests.csproj", "{02790542-D92E-4352-909C-4B878899284F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfConsole", "EfConsole\EfConsole.csproj", "{965842D8-CD3F-4A66-A5C5-3D54EF13E176}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{02790542-D92E-4352-909C-4B878899284F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02790542-D92E-4352-909C-4B878899284F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02790542-D92E-4352-909C-4B878899284F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{965842D8-CD3F-4A66-A5C5-3D54EF13E176}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{965842D8-CD3F-4A66-A5C5-3D54EF13E176}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{965842D8-CD3F-4A66-A5C5-3D54EF13E176}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{965842D8-CD3F-4A66-A5C5-3D54EF13E176}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

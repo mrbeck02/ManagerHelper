@@ -1,6 +1,6 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows.Input;
 
 namespace ManagerHelper.ViewModels.Support
 {
@@ -41,6 +41,11 @@ namespace ManagerHelper.ViewModels.Support
         protected bool IsInDesignMode()
         {
             return LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+        }
+
+        protected void refreshCanExecute(ICommand command)
+        {
+            (command as Command).ChangeCanExecute();
         }
     }
 }
