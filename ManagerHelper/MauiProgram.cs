@@ -1,5 +1,6 @@
 ﻿using ManagerHelper.CsvImporter;
 using ManagerHelper.Data;
+using ManagerHelper.Jira;
 using ManagerHelper.ViewModels;
 using ManagerHelper.ViewModels.Support;
 using Microsoft.EntityFrameworkCore;

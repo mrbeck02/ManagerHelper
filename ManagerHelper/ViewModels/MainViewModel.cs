@@ -2,14 +2,18 @@
 using ManagerHelper.DAL;
 using ManagerHelper.Data;
 using ManagerHelper.Data.Entities;
+using ManagerHelper.Jira;
 using ManagerHelper.ViewModels.Support;
 using Microsoft.EntityFrameworkCore;
+using RestSharp;
+using RestSharp.Authenticators;
 using System.Windows.Input;
 
 namespace ManagerHelper.ViewModels
 {
     public class MainViewModel : PropertyChangedNotifier, IDisposable, IMainViewModel
     {
+        private string _jiraUserNameKey = "jira_user_name";
         private IStatisticsCsvImporter _statisticsCsvImporter;
         private IDbContextFactory<DataContext> _contextFactory;
         private IStatisticsCsvReader _reader;
@@ -45,7 +49,54 @@ namespace ManagerHelper.ViewModels
             }
         }
 
+        private string _jiraApiToken = "";
+
+        public string JiraApiToken
+        {
+            get => _jiraApiToken;
+            set
+            {
+                if (string.CompareOrdinal(_jiraApiToken, value) == 0)
+                    return;
+
+                _jiraApiToken = value;
+                OnPropertyChanged(nameof(JiraApiToken));
+            }
+        }
+
+        private string _jiraUserName = "";
+
+        public string JiraUserName
+        {
+            get => _jiraUserName;
+            set
+            {
+                if (string.CompareOrdinal(_jiraUserName, value) == 0)
+                    return;
+
+                _jiraUserName = value;
+                Preferences.Default.Set(_jiraUserNameKey, value);
+                refreshCanExecute(PullJiraDataCommand);
+                OnPropertyChanged(nameof(JiraUserName));
+            }
+        }
+
+
         public Developer SelectedDeveloperOption { get; set; }
+
+        private List<JiraProject> _jiraProjectOptions;
+
+        public List<JiraProject> JiraProjectOptions
+        {
+            get => _jiraProjectOptions;
+            private set
+            {
+                _jiraProjectOptions = value;
+                OnPropertyChanged(nameof(JiraProjectOptions));
+            }
+        }
+
+        public JiraProject SelectedJiraProject { get; set; }
 
         #endregion
 
@@ -53,6 +104,8 @@ namespace ManagerHelper.ViewModels
         // MAUI Commands: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/data-binding/commanding?view=net-maui-7.0
 
         public ICommand ImportCsvCommand { get; set; }
+        public ICommand PullJiraDataCommand { get; set; }
+        public ICommand ExitCommand { get; set; }
 
         #endregion
 
@@ -71,20 +124,49 @@ namespace ManagerHelper.ViewModels
 
         private void initializeViewModel()
         {
+            _jiraUserName = Preferences.Default.Get(_jiraUserNameKey, "");
+            setupDeveloperOptions();
+            setupJiraProjectOptions();
+
+            createImportCsvCommand();
+            createExitCommand();
+            createPullJiraDataCommand();
+        }
+
+        private void setupDeveloperOptions()
+        {
             _developerOptions = createDeveloperOptions();
 
             if (_developerOptions.Count > 0)
             {
                 SelectedDeveloperOption = _developerOptions[0];
             }
+        }
 
-            createImportCsvCommand();
+        private void setupJiraProjectOptions()
+        {
+            _jiraProjectOptions = createJiraProjectOptions();
+
+            if (_jiraProjectOptions.Count > 0)
+            {
+                SelectedJiraProject = _jiraProjectOptions[0];
+            }
+        }
+
+        private List<JiraProject> createJiraProjectOptions()
+        {
+            var unitOfWork = new UnitOfWork(_contextFactory.CreateDbContext());
+
+            var projects = unitOfWork.JiraProjectRepository.Get().ToList();
+            projects.Sort((a, b) => a.Name.CompareTo(b.Name));
+
+            return projects;
         }
 
         private void createImportCsvCommand()
         {
             ImportCsvCommand = new Command(
-                execute: async () =>
+                execute: () =>
                 {
                     try
                     {
@@ -110,6 +192,32 @@ namespace ManagerHelper.ViewModels
                     return File.Exists(_csvPath);
                 });
 
+        }
+
+        private void createPullJiraDataCommand()
+        {
+            PullJiraDataCommand = new Command(
+                execute: async () =>
+                {
+                    var options = new RestClientOptions($"https://{SelectedJiraProject.Domain}");
+                    options.Authenticator = new HttpBasicAuthenticator(JiraUserName, JiraApiToken);
+                    var restClient = new RestClient(options);
+                    var jiraService = new JiraService(restClient);
+                    await jiraService.GetIssueAsync("ORANGE-14446");
+                },
+                canExecute: () =>
+                {
+                    return !string.IsNullOrEmpty(JiraUserName);
+                });
+        }
+
+        private void createExitCommand()
+        {
+            ExitCommand = new Command(
+                execute: () =>
+                {
+                    _alertService.ShowConfirmation("Quit", "Exit the application?", r => { if (r) Application.Current.Quit(); });
+                });
         }
 
         protected List<Developer> createDeveloperOptions()

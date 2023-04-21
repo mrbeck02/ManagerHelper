@@ -2,12 +2,40 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ManagerHelper.MainPage">
-
     <ScrollView>
         <VerticalStackLayout
-            Spacing="25"
+            Spacing="0"
             Padding="30,0"
-            VerticalOptions="Center">
+            VerticalOptions="StartAndExpand">
+
+            <Picker 
+                Title = "Jira Project"
+                FontSize="16"
+                VerticalOptions="CenterAndExpand"
+                ItemsSource="{Binding JiraProjectOptions}"
+                ItemDisplayBinding="{Binding Name}"
+                SelectedItem="{Binding SelectedJiraProjectOptions} "/>
+
+            <Label
+                Text="Jira Username"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="16" />
+
+            <Entry FontSize="16"
+                   Text="{Binding JiraUserName}" />
+
+            <Button
+                Text="Pull Jira Data"
+                Command="{Binding PullJiraDataCommand}"
+                Margin="0,10,0,20"/>
+
+            <Label
+                Text="API Token"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="16" />
+            
+            <Entry FontSize="16"
+                   Text="{Binding JiraApiToken}" />
 
             <Picker 
                 Title = "Developer"
@@ -27,9 +55,10 @@
 
             <Button
                 Text="Import"
-                Command="{Binding ImportCsvCommand}" />
+                Command="{Binding ImportCsvCommand}"
+                Margin="0,10,0,0"/>
 
-            <Image
+            <!--<Image
                 Source="dotnet_bot.png"
                 SemanticProperties.Description="Cute dot net bot waving hi to you!"
                 HeightRequest="200"
@@ -53,10 +82,7 @@
                 Text="Click me"
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-
-            <Label Text="{Binding CsvPath}" />
-            
+                HorizontalOptions="Center" />-->
 
         </VerticalStackLayout>
     </ScrollView>
