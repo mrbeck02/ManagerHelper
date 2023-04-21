@@ -13,7 +13,8 @@ namespace ManagerHelper.ViewModels
 {
     public class MainViewModel : PropertyChangedNotifier, IDisposable, IMainViewModel
     {
-        private string _jiraUserNameKey = "jira_user_name";
+        private static readonly string _jiraUserNameKey = "jira_user_name";
+        private static readonly string _csvPathKey = "csv_path";
         private IStatisticsCsvImporter _statisticsCsvImporter;
         private IDbContextFactory<DataContext> _contextFactory;
         private IStatisticsCsvReader _reader;
@@ -21,7 +22,7 @@ namespace ManagerHelper.ViewModels
 
         #region Properties
 
-        private string _csvPath = @"C:\Temp";
+        private string _csvPath = "";
 
         public string CsvPath
         {
@@ -32,6 +33,7 @@ namespace ManagerHelper.ViewModels
                     return;
 
                 _csvPath = value;
+                Preferences.Default.Set(_csvPathKey, value);
                 OnPropertyChanged(nameof(CsvPath));
                 refreshCanExecute(ImportCsvCommand);
             }
@@ -125,6 +127,7 @@ namespace ManagerHelper.ViewModels
         private void initializeViewModel()
         {
             _jiraUserName = Preferences.Default.Get(_jiraUserNameKey, "");
+            _csvPath = Preferences.Default.Get(_csvPathKey, "");
             setupDeveloperOptions();
             setupJiraProjectOptions();
 
@@ -199,6 +202,7 @@ namespace ManagerHelper.ViewModels
             PullJiraDataCommand = new Command(
                 execute: async () =>
                 {
+                    // The Jira API token process was documented here: https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/
                     var options = new RestClientOptions($"https://{SelectedJiraProject.Domain}");
                     options.Authenticator = new HttpBasicAuthenticator(JiraUserName, JiraApiToken);
                     var restClient = new RestClient(options);
