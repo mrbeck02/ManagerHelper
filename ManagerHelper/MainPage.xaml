@@ -24,11 +24,6 @@
             <Entry FontSize="16"
                    Text="{Binding JiraUserName}" />
 
-            <Button
-                Text="Pull Jira Data"
-                Command="{Binding PullJiraDataCommand}"
-                Margin="0,10,0,20"/>
-
             <Label
                 Text="API Token"
                 SemanticProperties.HeadingLevel="Level1"
@@ -36,6 +31,11 @@
             
             <Entry FontSize="16"
                    Text="{Binding JiraApiToken}" />
+
+            <Button
+                Text="Pull Jira Data"
+                Command="{Binding PullJiraDataCommand}"
+                Margin="0,10,0,20"/>
 
             <Picker 
                 Title = "Developer"
