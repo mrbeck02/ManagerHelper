@@ -26,15 +26,9 @@ public static class MauiProgram
         builder.Services.AddScoped<IMainViewModel, MainViewModel>();
         builder.Services.AddScoped<IDesignTimeDbContextFactory<DataContext>, DesignTimeDataContextFactory>();
         builder.Services.AddScoped<IAlertService, AlertService>();
-        builder.Services.AddScoped<IDbContextFactory<DataContext>, DataContextFactory>();
+        builder.Services.AddScoped<ISqliteDataContextFactory<DataContext>, SqliteDataContextFactory>();
         builder.Services.AddScoped<IStatisticsCsvReader, StatisticsCsvReader>();
         builder.Services.AddScoped<IStatisticsCsvImporter, StatisticsCsvImporter>();
-
-        builder.Services.AddDbContext<DataContext>(options =>
-        {
-            options.UseSqlite("Data Source=c:\\Temp\\mydb.db");
-            options.LogTo(Console.WriteLine);
-        });
 
         return builder.Build();
 	}

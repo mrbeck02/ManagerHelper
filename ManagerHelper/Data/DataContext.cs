@@ -31,12 +31,6 @@ namespace ManagerHelper.Data
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Data Source=c:\\Temp\\mydb.db");
-            optionsBuilder.LogTo(Console.WriteLine);
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<IssueStatus>().HasData(

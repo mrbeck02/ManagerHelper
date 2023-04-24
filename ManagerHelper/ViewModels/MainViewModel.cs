@@ -4,7 +4,6 @@ using ManagerHelper.Data;
 using ManagerHelper.Data.Entities;
 using ManagerHelper.Jira;
 using ManagerHelper.ViewModels.Support;
-using Microsoft.EntityFrameworkCore;
 using RestSharp;
 using RestSharp.Authenticators;
 using System.Windows.Input;
@@ -16,11 +15,30 @@ namespace ManagerHelper.ViewModels
         private static readonly string _jiraUserNameKey = "jira_user_name";
         private static readonly string _csvPathKey = "csv_path";
         private IStatisticsCsvImporter _statisticsCsvImporter;
-        private IDbContextFactory<DataContext> _contextFactory;
+        private ISqliteDataContextFactory<DataContext> _contextFactory;
         private IStatisticsCsvReader _reader;
         private IAlertService _alertService;
 
         #region Properties
+
+        private string _dbPath = "";
+
+        public string DbPath
+        {
+            get => _dbPath;
+            set
+            {
+                if (string.CompareOrdinal(_dbPath, value) == 0)
+                    return;
+
+                _dbPath = value;
+                setupContextFactory();
+                setupDeveloperOptions();
+                setupJiraProjectOptions();
+                OnPropertyChanged(nameof(DbPath));
+                refreshCanExecute(ImportCsvCommand);
+            }
+        }
 
         private string _csvPath = "";
 
@@ -39,9 +57,9 @@ namespace ManagerHelper.ViewModels
             }
         }
 
-        private List<Developer> _developerOptions;
+        private IList<Developer> _developerOptions = new List<Developer>();
 
-        public List<Developer> DeveloperOptions
+        public IList<Developer> DeveloperOptions
         {
             get => _developerOptions;
             private set
@@ -84,11 +102,24 @@ namespace ManagerHelper.ViewModels
         }
 
 
-        public Developer SelectedDeveloperOption { get; set; }
+        private Developer _selectedDeveloperOption;
 
-        private List<JiraProject> _jiraProjectOptions;
+        public Developer SelectedDeveloperOption
+        {
+            get => _selectedDeveloperOption;
+            set
+            {
+                if (_selectedDeveloperOption == value)
+                    return;
 
-        public List<JiraProject> JiraProjectOptions
+                _selectedDeveloperOption = value;
+                OnPropertyChanged(nameof(SelectedDeveloperOption));
+            }
+        }
+
+        private IList<JiraProject> _jiraProjectOptions = new List<JiraProject>();
+
+        public IList<JiraProject> JiraProjectOptions
         {
             get => _jiraProjectOptions;
             private set
@@ -98,7 +129,20 @@ namespace ManagerHelper.ViewModels
             }
         }
 
-        public JiraProject SelectedJiraProject { get; set; }
+        private JiraProject _selectedJiraProject;
+
+        public JiraProject SelectedJiraProject
+        {
+            get => _selectedJiraProject;
+            set
+            {
+                if (_selectedJiraProject == value)
+                    return;
+
+                _selectedJiraProject = value;
+                OnPropertyChanged(nameof(SelectedJiraProject));
+            }
+        }
 
         #endregion
 
@@ -108,10 +152,11 @@ namespace ManagerHelper.ViewModels
         public ICommand ImportCsvCommand { get; set; }
         public ICommand PullJiraDataCommand { get; set; }
         public ICommand ExitCommand { get; set; }
+        public ICommand SelectDbCommand { get; set; }
 
         #endregion
 
-        public MainViewModel(IDbContextFactory<DataContext> contextFactory,
+        public MainViewModel(ISqliteDataContextFactory<DataContext> contextFactory,
             IStatisticsCsvReader reader,
             IStatisticsCsvImporter statisticsCsvImporter,
             IAlertService alertService)
@@ -128,19 +173,23 @@ namespace ManagerHelper.ViewModels
         {
             _jiraUserName = Preferences.Default.Get(_jiraUserNameKey, "");
             _csvPath = Preferences.Default.Get(_csvPathKey, "");
-            setupDeveloperOptions();
-            setupJiraProjectOptions();
 
+            createSelectDbCommand();
             createImportCsvCommand();
             createExitCommand();
             createPullJiraDataCommand();
         }
 
+        private void setupContextFactory()
+        {
+            _contextFactory.DbPath = DbPath;
+        }
+
         private void setupDeveloperOptions()
         {
-            _developerOptions = createDeveloperOptions();
+            DeveloperOptions = createDeveloperOptions();
 
-            if (_developerOptions.Count > 0)
+            if (DeveloperOptions.Count > 0)
             {
                 SelectedDeveloperOption = _developerOptions[0];
             }
@@ -148,15 +197,15 @@ namespace ManagerHelper.ViewModels
 
         private void setupJiraProjectOptions()
         {
-            _jiraProjectOptions = createJiraProjectOptions();
+            JiraProjectOptions = createJiraProjectOptions();
 
-            if (_jiraProjectOptions.Count > 0)
+            if (JiraProjectOptions.Count > 0)
             {
                 SelectedJiraProject = _jiraProjectOptions[0];
             }
         }
 
-        private List<JiraProject> createJiraProjectOptions()
+        private IList<JiraProject> createJiraProjectOptions()
         {
             var unitOfWork = new UnitOfWork(_contextFactory.CreateDbContext());
 
@@ -164,6 +213,56 @@ namespace ManagerHelper.ViewModels
             projects.Sort((a, b) => a.Name.CompareTo(b.Name));
 
             return projects;
+        }
+
+        private void createSelectDbCommand()
+        {
+            SelectDbCommand = new Command(
+                execute: async () =>
+                {
+                    PickOptions options = new()
+                    {
+                        PickerTitle = "Select SQL File"
+                    };
+
+                    var result = await pickAndShow(options);
+
+                    if (!File.Exists(result.FullPath))
+                    {
+                        _alertService.ShowAlert("Error", $"The given file does not exist. {result.FullPath}");
+                        return;
+                    }
+
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        DbPath = result.FullPath;
+                    });
+                });
+        }
+
+        private async Task<FileResult> pickAndShow(PickOptions options)
+        {
+            try
+            {
+                var result = await FilePicker.Default.PickAsync(options);
+                if (result != null)
+                {
+                    if (result.FileName.EndsWith("jpg", StringComparison.OrdinalIgnoreCase) ||
+                        result.FileName.EndsWith("png", StringComparison.OrdinalIgnoreCase))
+                    {
+                        using var stream = await result.OpenReadAsync();
+                        var image = ImageSource.FromStream(() => stream);
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception)
+            {
+                // The user canceled or something went wrong
+            }
+
+            return null;
         }
 
         private void createImportCsvCommand()
@@ -224,7 +323,7 @@ namespace ManagerHelper.ViewModels
                 });
         }
 
-        protected List<Developer> createDeveloperOptions()
+        protected IList<Developer> createDeveloperOptions()
         {
             var unitOfWork = new UnitOfWork(_contextFactory.CreateDbContext());
 
