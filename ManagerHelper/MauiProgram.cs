@@ -24,7 +24,7 @@ public static class MauiProgram
 		
 		builder.Services.AddSingleton<MainPage>();
         builder.Services.AddScoped<IMainViewModel, MainViewModel>();
-        builder.Services.AddScoped<IDesignTimeDbContextFactory<DataContext>, DesignTimeDataContextFactory>();
+        //builder.Services.AddScoped<IDesignTimeDbContextFactory<DataContext>, DesignTimeDataContextFactory>();
         builder.Services.AddScoped<IAlertService, AlertService>();
         builder.Services.AddScoped<ISqliteDataContextFactory<DataContext>, SqliteDataContextFactory>();
         builder.Services.AddScoped<IStatisticsCsvReader, StatisticsCsvReader>();
