@@ -3,6 +3,7 @@ using ManagerHelper.DAL;
 using ManagerHelper.Data;
 using ManagerHelper.Data.Entities;
 using ManagerHelper.Jira;
+using ManagerHelper.Resources;
 using ManagerHelper.ViewModels.Support;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -12,8 +13,6 @@ namespace ManagerHelper.ViewModels
 {
     public class ImportFromCsvViewModel : PropertyChangedNotifier, IDisposable, IImportFromCsvViewModel
     {
-        private static readonly string _jiraUserNameKey = "jira_user_name";
-        private static readonly string _csvPathKey = "csv_path";
         private IStatisticsCsvImporter _statisticsCsvImporter;
         private ISqliteDataContextFactory<DataContext> _contextFactory;
         private IStatisticsCsvReader _reader;
@@ -32,7 +31,7 @@ namespace ManagerHelper.ViewModels
                     return;
 
                 _csvPath = value;
-                Preferences.Default.Set(_csvPathKey, value);
+                Preferences.Default.Set(PreferenceKey.csv_path.ToString(), value);
                 OnPropertyChanged(nameof(CsvPath));
                 refreshCanExecute(ImportCsvCommand);
             }
@@ -76,7 +75,7 @@ namespace ManagerHelper.ViewModels
                     return;
 
                 _jiraUserName = value;
-                Preferences.Default.Set(_jiraUserNameKey, value);
+                Preferences.Default.Set(PreferenceKey.jira_user_name.ToString(), value);
                 refreshCanExecute(PullJiraDataCommand);
                 OnPropertyChanged(nameof(JiraUserName));
             }
@@ -151,8 +150,8 @@ namespace ManagerHelper.ViewModels
 
         private void initializeViewModel()
         {
-            _jiraUserName = Preferences.Default.Get(_jiraUserNameKey, "");
-            _csvPath = Preferences.Default.Get(_csvPathKey, "");
+            _jiraUserName = Preferences.Default.Get(PreferenceKey.jira_user_name.ToString(), "");
+            _csvPath = Preferences.Default.Get(PreferenceKey.csv_path.ToString(), "");
 
             createImportCsvCommand();
             createExitCommand();
