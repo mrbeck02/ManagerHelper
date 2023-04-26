@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace ManagerHelper.ViewModels
 {
-    public class MainViewModel : PropertyChangedNotifier, IDisposable, IMainViewModel
+    public class ImportFromCsvViewModel : PropertyChangedNotifier, IDisposable, IImportFromCsvViewModel
     {
         private static readonly string _jiraUserNameKey = "jira_user_name";
         private static readonly string _csvPathKey = "csv_path";
@@ -20,25 +20,6 @@ namespace ManagerHelper.ViewModels
         private IAlertService _alertService;
 
         #region Properties
-
-        private string _dbPath = "";
-
-        public string DbPath
-        {
-            get => _dbPath;
-            set
-            {
-                if (string.CompareOrdinal(_dbPath, value) == 0)
-                    return;
-
-                _dbPath = value;
-                setupContextFactory();
-                setupDeveloperOptions();
-                setupJiraProjectOptions();
-                OnPropertyChanged(nameof(DbPath));
-                refreshCanExecute(ImportCsvCommand);
-            }
-        }
 
         private string _csvPath = "";
 
@@ -152,11 +133,10 @@ namespace ManagerHelper.ViewModels
         public ICommand ImportCsvCommand { get; set; }
         public ICommand PullJiraDataCommand { get; set; }
         public ICommand ExitCommand { get; set; }
-        public ICommand SelectDbCommand { get; set; }
 
         #endregion
 
-        public MainViewModel(ISqliteDataContextFactory<DataContext> contextFactory,
+        public ImportFromCsvViewModel(ISqliteDataContextFactory<DataContext> contextFactory,
             IStatisticsCsvReader reader,
             IStatisticsCsvImporter statisticsCsvImporter,
             IAlertService alertService)
@@ -174,16 +154,15 @@ namespace ManagerHelper.ViewModels
             _jiraUserName = Preferences.Default.Get(_jiraUserNameKey, "");
             _csvPath = Preferences.Default.Get(_csvPathKey, "");
 
-            createSelectDbCommand();
             createImportCsvCommand();
             createExitCommand();
             createPullJiraDataCommand();
         }
 
-        private void setupContextFactory()
-        {
-            _contextFactory.DbPath = DbPath;
-        }
+        //private void setupContextFactory()
+        //{
+        //    _contextFactory.DbPath = DbPath;
+        //}
 
         private void setupDeveloperOptions()
         {
@@ -213,56 +192,6 @@ namespace ManagerHelper.ViewModels
             projects.Sort((a, b) => a.Name.CompareTo(b.Name));
 
             return projects;
-        }
-
-        private void createSelectDbCommand()
-        {
-            SelectDbCommand = new Command(
-                execute: async () =>
-                {
-                    PickOptions options = new()
-                    {
-                        PickerTitle = "Select SQL File"
-                    };
-
-                    var result = await pickAndShow(options);
-
-                    if (!File.Exists(result.FullPath))
-                    {
-                        _alertService.ShowAlert("Error", $"The given file does not exist. {result.FullPath}");
-                        return;
-                    }
-
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        DbPath = result.FullPath;
-                    });
-                });
-        }
-
-        private async Task<FileResult> pickAndShow(PickOptions options)
-        {
-            try
-            {
-                var result = await FilePicker.Default.PickAsync(options);
-                if (result != null)
-                {
-                    if (result.FileName.EndsWith("jpg", StringComparison.OrdinalIgnoreCase) ||
-                        result.FileName.EndsWith("png", StringComparison.OrdinalIgnoreCase))
-                    {
-                        using var stream = await result.OpenReadAsync();
-                        var image = ImageSource.FromStream(() => stream);
-                    }
-                }
-
-                return result;
-            }
-            catch (Exception)
-            {
-                // The user canceled or something went wrong
-            }
-
-            return null;
         }
 
         private void createImportCsvCommand()

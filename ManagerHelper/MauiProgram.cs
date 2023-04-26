@@ -1,11 +1,8 @@
 ﻿using ManagerHelper.CsvImporter;
 using ManagerHelper.Data;
-using ManagerHelper.Jira;
+using ManagerHelper.Pages;
 using ManagerHelper.ViewModels;
 using ManagerHelper.ViewModels.Support;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ManagerHelper;
 
@@ -20,10 +17,12 @@ public static class MauiProgram
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			}); 
-		
-		builder.Services.AddSingleton<MainPage>();
-        builder.Services.AddScoped<IMainViewModel, MainViewModel>();
+			});
+
+		builder.Services.AddSingleton<ImportFromCsvPage>();
+        builder.Services.AddSingleton<SetupDatastorePage>();
+        builder.Services.AddScoped<IImportFromCsvViewModel, ImportFromCsvViewModel>();
+        builder.Services.AddScoped<ISetupDatastoreViewModel, SetupDatastoreViewModel>();
         //builder.Services.AddScoped<IDesignTimeDbContextFactory<DataContext>, DesignTimeDataContextFactory>();
         builder.Services.AddScoped<IAlertService, AlertService>();
         builder.Services.AddScoped<ISqliteDataContextFactory<DataContext>, SqliteDataContextFactory>();

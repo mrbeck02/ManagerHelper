@@ -57,7 +57,30 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Pages\" />
+	  <Compile Update="Pages\ImportFromCsvPage.xaml.cs">
+	    <DependentUpon>ImportFromCsvPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\SetupDatastorePage.xaml.cs">
+	    <DependentUpon>SetupDatastorePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\SetupJiraPage.xaml.cs">
+	    <DependentUpon>SetupJiraPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Pages\SetupDatastorePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\SetupJiraPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\Navigation\FlyoutFooter.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\Navigation\FlyoutHeader.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

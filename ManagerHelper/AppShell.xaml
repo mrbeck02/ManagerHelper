@@ -3,12 +3,26 @@
     x:Class="ManagerHelper.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:ManagerHelper"
-    Shell.FlyoutBehavior="Disabled">
+    xmlns:pages="clr-namespace:ManagerHelper.Pages"
+    xmlns:navigation="clr-namespace:ManagerHelper.Pages.Navigation"
+    Shell.FlyoutBehavior="Flyout"
+    FlyoutHeaderBehavior="CollapseOnScroll">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <Shell.FlyoutHeader>
+        <navigation:FlyoutHeader />
+    </Shell.FlyoutHeader>
 
+    <Shell.FlyoutFooter>
+        <navigation:FlyoutFooter />
+    </Shell.FlyoutFooter>
+
+    <!--<FlyoutItem Title="Cats" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent Title="Cats" ContentTemplate="{DataTemplate pages:CatsPage}" />
+        <ShellContent Title="Dogs" ContentTemplate="{DataTemplate pages:DogsPage}" />
+    </FlyoutItem>-->
+    <FlyoutItem Title="Settings">
+        <ShellContent Title="Setup Jira" ContentTemplate="{DataTemplate pages:SetupJiraPage}" />
+        <ShellContent Title="Setup Datastore" ContentTemplate="{DataTemplate pages:SetupDatastorePage}" />
+        <ShellContent Title="Import from CSV" ContentTemplate="{DataTemplate pages:ImportFromCsvPage}" />
+    </FlyoutItem>
 </Shell>

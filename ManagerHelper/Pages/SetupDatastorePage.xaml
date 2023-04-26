@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ManagerHelper.Pages.SetupDatastorePage"
+             Title="Setup Datastore">
+    <VerticalStackLayout>
+        <Label
+                Text="Database path"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="16" />
+
+        <Label
+                Text="{Binding DbPath}"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="16" />
+
+        <Button
+                Text="Select Database"
+                Command="{Binding SelectDbCommand}"
+                Margin="0,10,0,20"/>
+    </VerticalStackLayout>
+</ContentPage>
