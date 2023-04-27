@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ManagerHelper.Pages.SetupDatastorePage"
              Title="Setup Datastore">
-    <VerticalStackLayout>
+    <VerticalStackLayout
+            Spacing="0"
+            Padding="30,0"
+            VerticalOptions="StartAndExpand">
         <Label
                 Text="Database path"
                 SemanticProperties.HeadingLevel="Level1"

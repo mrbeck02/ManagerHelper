@@ -8,37 +8,6 @@
             Padding="30,0"
             VerticalOptions="StartAndExpand">
 
-            
-
-            <Picker 
-                Title = "Jira Project"
-                FontSize="16"
-                VerticalOptions="CenterAndExpand"
-                ItemsSource="{Binding JiraProjectOptions}"
-                ItemDisplayBinding="{Binding Name}"
-                SelectedItem="{Binding SelectedJiraProjectOption} "/>
-
-            <Label
-                Text="Jira Username"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="16" />
-
-            <Entry FontSize="16"
-                   Text="{Binding JiraUserName}" />
-
-            <Label
-                Text="API Token"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="16" />
-            
-            <Entry FontSize="16"
-                   Text="{Binding JiraApiToken}" />
-
-            <Button
-                Text="Pull Jira Data"
-                Command="{Binding PullJiraDataCommand}"
-                Margin="0,10,0,20"/>
-
             <Picker 
                 Title = "Developer"
                 FontSize="16"

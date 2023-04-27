@@ -21,8 +21,10 @@ public static class MauiProgram
 
 		builder.Services.AddSingleton<ImportFromCsvPage>();
         builder.Services.AddSingleton<SetupDatastorePage>();
+        builder.Services.AddSingleton<SetupJiraPage>();
         builder.Services.AddScoped<IImportFromCsvViewModel, ImportFromCsvViewModel>();
         builder.Services.AddScoped<ISetupDatastoreViewModel, SetupDatastoreViewModel>();
+        builder.Services.AddScoped<ISetupJiraViewModel, SetupJiraViewModel>();
         //builder.Services.AddScoped<IDesignTimeDbContextFactory<DataContext>, DesignTimeDataContextFactory>();
         builder.Services.AddScoped<IAlertService, AlertService>();
         builder.Services.AddScoped<ISqliteDataContextFactory<DataContext>, SqliteDataContextFactory>();

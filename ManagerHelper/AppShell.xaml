@@ -21,8 +21,8 @@
         <ShellContent Title="Dogs" ContentTemplate="{DataTemplate pages:DogsPage}" />
     </FlyoutItem>-->
     <FlyoutItem Title="Settings">
-        <ShellContent Title="Setup Jira" ContentTemplate="{DataTemplate pages:SetupJiraPage}" />
         <ShellContent Title="Setup Datastore" ContentTemplate="{DataTemplate pages:SetupDatastorePage}" />
+        <ShellContent Title="Setup Jira" ContentTemplate="{DataTemplate pages:SetupJiraPage}" />
         <ShellContent Title="Import from CSV" ContentTemplate="{DataTemplate pages:ImportFromCsvPage}" />
     </FlyoutItem>
 </Shell>
