@@ -16,10 +16,9 @@
         <navigation:FlyoutFooter />
     </Shell.FlyoutFooter>
 
-    <!--<FlyoutItem Title="Cats" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent Title="Cats" ContentTemplate="{DataTemplate pages:CatsPage}" />
-        <ShellContent Title="Dogs" ContentTemplate="{DataTemplate pages:DogsPage}" />
-    </FlyoutItem>-->
+    <FlyoutItem Title="Team" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent Title="Velocity" ContentTemplate="{DataTemplate pages:TeamVelocityPage}" />
+    </FlyoutItem>
     <FlyoutItem Title="Settings">
         <ShellContent Title="Setup Datastore" ContentTemplate="{DataTemplate pages:SetupDatastorePage}" />
         <ShellContent Title="Setup Jira" ContentTemplate="{DataTemplate pages:SetupJiraPage}" />
