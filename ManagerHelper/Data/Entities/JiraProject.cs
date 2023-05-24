@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ManagerHelper.Data.Entities
 {
@@ -13,15 +11,8 @@ namespace ManagerHelper.Data.Entities
 
         public string Domain { get; set; } = "";
 
-        #region Relationships
-
-        public virtual ICollection<JiraIssue> JiraIssues { get; set; }
-
-        #endregion
-
         public JiraProject() 
         { 
-            JiraIssues = new HashSet<JiraIssue>();
         }
     }
 }

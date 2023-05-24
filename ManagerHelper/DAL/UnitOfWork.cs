@@ -1,5 +1,4 @@
-﻿using System;
-using ManagerHelper.Data;
+﻿using ManagerHelper.Data;
 using ManagerHelper.Data.Entities;
 
 namespace ManagerHelper.DAL
