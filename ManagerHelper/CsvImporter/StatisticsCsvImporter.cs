@@ -181,6 +181,9 @@ namespace ManagerHelper.CsvImporter
                 DateEntered = dateEntered,
                 IssueStatusId = issueStatus.Id
             };
+
+            unitOfWork.EntryRepository.Insert(entry);
+            unitOfWork.Save();
         }
     }
 }
