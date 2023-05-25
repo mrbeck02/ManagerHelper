@@ -62,6 +62,8 @@ public class StatisticsCsvImporterTests
             TimeZone = "Eastern Standard Time"
         };
 
+        var notes = "Anton started testing Monday Aug 22\r\nQA environment was taken up by regression in the 1st week.\r\nOnly bug that came back was at 10p yesterday and Charles found it.";
+
         var entry = new StatisticsCsvEntry()
         {
             Date = DateTime.Parse("8/15/2022"),
@@ -83,14 +85,15 @@ public class StatisticsCsvImporterTests
             Day10 = "In Test",
             Done = 8,
             Rollover = "",
-            Notes = "Anton started testing Monday Aug 22\r\nQA environment was taken up by regression in the 1st week.\r\nOnly bug that came back was at 10p yesterday and Charles found it."
+            Notes = notes
         };
 
         importer.ImportData(new List<StatisticsCsvEntry>() { entry }, dev, uow);
 
         // TODO: More coverage could be added here.
-        Assert.True(uow.SprintRepository.Get(s => string.Compare(s.Name, "2022-AUG-2") == 0).ToList().Count == 1);
-        Assert.True(uow.QuarterRepository.Get(q => string.Compare(q.Name, "Q3 2022") == 0 && q.QuarterNumber == 3 && q.Year == 2022).ToList().Count == 1);
-        Assert.True(uow.JiraIssueRepository.Get(i => string.Compare(i.Number, "11569") == 0 && !i.IsRegressionBug && i.StoryPoints == 8).ToList().Count == 1);
+        Assert.True(uow.SprintRepository.Get(s => string.Compare(s.Name, "2022-AUG-2") == 0).Count() == 1);
+        Assert.True(uow.QuarterRepository.Get(q => string.Compare(q.Name, "Q3 2022") == 0 && q.QuarterNumber == 3 && q.Year == 2022).Count() == 1);
+        Assert.True(uow.JiraIssueRepository.Get(i => string.Compare(i.Number, "11569") == 0 && !i.IsRegressionBug && i.StoryPoints == 8).Count() == 1);
+        Assert.True(uow.CommitmentRepository.Get(c => c.DidComplete && string.Compare(c.Notes, notes) == 0).Count() == 1);
     }
 }
