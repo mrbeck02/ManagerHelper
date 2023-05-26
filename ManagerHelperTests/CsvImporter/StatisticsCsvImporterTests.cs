@@ -13,7 +13,7 @@ public class StatisticsCsvImporterTests
     {
         _factory = new TestSqliteDataContextFactory();
 
-        var uow = new UnitOfWork(_factory.CreateDataContext());
+        var uow = new UnitOfWork(_factory.CreateDbContext());
         var developer = new Developer()
         {
             Id = Guid.Parse("5DC1E1D0-003F-4F03-B69E-C92D919CA81B"),
@@ -49,7 +49,7 @@ public class StatisticsCsvImporterTests
     [Fact]
     public void ImportData_WhenValidDataIsGivenToFreshDb_CorrectDataIsInserted()
     {
-        var context = _factory.CreateDataContext();
+        var context = _factory.CreateDbContext();
         var uow = new UnitOfWork(context);
         var importer = new StatisticsCsvImporter();
         var dev = new Developer()
