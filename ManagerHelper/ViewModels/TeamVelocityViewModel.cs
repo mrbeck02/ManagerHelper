@@ -39,10 +39,21 @@ namespace ManagerHelper.ViewModels
             if (result.Count == 0)
                 throw new Exception("Mashini is missing!");
 
+            // The sprints don't contain a list of commitments.  So I can't pull them that way.  I can pull all commitments for the developer.
+
+            // Get all commitments
             var commitments = unitOfWork.CommitmentRepository.Get(c => c.DeveloperId == result[0].Id);
 
-            var quarterlyCommitments = commitments.GroupBy(g => g.Sprint.QuarterId);
+            // Group commitments into sprint items for display
+            var sprintGroups = commitments.GroupBy(c => c.SprintId);
 
+            // loop throgh each sprint group and create a sprint
+            var sprintSummaries = new List<DeveloperSprintSummary>();
+
+            foreach (var sprintCommitmentList in sprintGroups)
+            {
+                sprintSummaries.Add(new DeveloperSprintSummary(sprintCommitmentList.ToList()));
+            }
         }
     }
 }
