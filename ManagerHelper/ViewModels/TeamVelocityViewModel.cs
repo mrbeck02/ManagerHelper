@@ -24,7 +24,7 @@ namespace ManagerHelper.ViewModels
         {
             _alertService = alertService;
             _contextFactory = contextFactory;
-            _contextFactory.DbPath = Preferences.Default.Get(PreferenceKey.db_location.ToString(), "");
+            //_contextFactory.DbPath = Preferences.Default.Get(PreferenceKey.db_location.ToString(), "");
 
             createDeveloperSprintSummaryGroups(new UnitOfWork(_contextFactory.CreateDbContext()));
         }
@@ -42,18 +42,27 @@ namespace ManagerHelper.ViewModels
             // The sprints don't contain a list of commitments.  So I can't pull them that way.  I can pull all commitments for the developer.
 
             // Get all commitments
-            var commitments = unitOfWork.CommitmentRepository.Get(c => c.DeveloperId == result[0].Id);
+            var commitments = unitOfWork.CommitmentRepository.Get(c => c.DeveloperId == result[0].Id, null, "JiraIssue");
 
             // Group commitments into sprint items for display
             var sprintGroups = commitments.GroupBy(c => c.SprintId);
 
-            // loop throgh each sprint group and create a sprint
+            // loop throgh each sprint group and create a sprint summary
             var sprintSummaries = new List<DeveloperSprintSummary>();
 
             foreach (var sprintCommitmentList in sprintGroups)
             {
                 sprintSummaries.Add(new DeveloperSprintSummary(sprintCommitmentList.ToList()));
             }
+
+            // Add the sprint summaries to the appropriate quarters
+
+            //foreach (var sprintSummary in sprintSummaries)
+            //{
+            //    if (Groups.Any(g => string.Compare(g.Name, sprintSummary.Quarter))
+            //}
+            //Groups.Add(new DeveloperSprintSummaryGroup())
+
         }
     }
 }

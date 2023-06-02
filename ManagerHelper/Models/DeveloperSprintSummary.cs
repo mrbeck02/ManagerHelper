@@ -20,7 +20,10 @@ namespace ManagerHelper.Models
 
             CommittedStoryPoints = commitments.Sum(c => c.IncludeInData ? c.JiraIssue.StoryPoints : 0);
             CompletedStoryPoints = commitments.Sum(c => c.IncludeInData && c.DidComplete ? c.JiraIssue.StoryPoints : 0);
-            CompletionPercentage = 100 * (CommittedStoryPoints / CompletedStoryPoints);
+
+            if (CommittedStoryPoints > 0)
+                CompletionPercentage = 100 * (CompletedStoryPoints / CommittedStoryPoints);
+
             RolloverIssueCount = commitments.Sum(c => c.IncludeInData && !c.DidComplete ? 1 : 0);
             CountSprintValues = commitments.TrueForAll(c => c.IncludeInData);
         }
