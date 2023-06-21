@@ -1,14 +1,8 @@
 ﻿using ManagerHelper.DAL;
 using ManagerHelper.Data;
 using ManagerHelper.Models;
-using ManagerHelper.Resources;
 using ManagerHelper.ViewModels.Support;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ManagerHelper.ViewModels
 {
@@ -56,6 +50,8 @@ namespace ManagerHelper.ViewModels
             }
 
             // Add the sprint summaries to the appropriate quarters
+            // We have a bunch of sprint summaries that need to be grouped by quarters and sorted by date.  Quarters from latest to oldest
+
 
             //foreach (var sprintSummary in sprintSummaries)
             //{
