@@ -1,6 +1,7 @@
 ﻿using ManagerHelper.DAL;
 using ManagerHelper.Data;
 using ManagerHelper.Models;
+using ManagerHelper.Resources;
 using ManagerHelper.ViewModels.Support;
 using System.Collections.ObjectModel;
 
@@ -18,7 +19,7 @@ namespace ManagerHelper.ViewModels
         {
             _alertService = alertService;
             _contextFactory = contextFactory;
-            //_contextFactory.DbPath = Preferences.Default.Get(PreferenceKey.db_location.ToString(), "");
+            _contextFactory.DbPath = Preferences.Default.Get(PreferenceKey.db_location.ToString(), "");
 
             createDeveloperSprintSummaryGroups(new UnitOfWork(_contextFactory.CreateDbContext()));
         }

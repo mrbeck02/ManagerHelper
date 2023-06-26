@@ -10,17 +10,33 @@ namespace ManagerHelperTests.ViewModels
     public class TeamVelocityViewModelTests
     {
         private readonly TestSqliteDataContextFactory _factory;
-        private readonly Guid _mashinisId;
-        private readonly Guid _jiraProjectId;
+        private readonly Guid _mashinisId, _jiraProjectId, _sprint1Id, _sprint2Id, _sprint3Id, _jiraIssue2Id, _jiraIssue4Id;
+
+
+        /// <summary>
+        /// Test Db Summary
+        /// 2 developers (mashini, glen)
+        /// 1 Jira project for ORANGE
+        /// 2 quarters Q3 & Q4 2022)
+        /// 4 sprints (2022-AUG-2, 2022-AUG-3, 2022-SEPT-1, 2022-SEPT-2)
+        /// 4 Jira issues (11703, 11569, 11960, 12048)
+        /// 4 commitments (
+        /// </summary>
 
         public TeamVelocityViewModelTests()
         {
             _factory = new TestSqliteDataContextFactory();
             _mashinisId = Guid.Parse("5DC1E1D0-003F-4F03-B69E-C92D919CA81B");
             _jiraProjectId = Guid.Parse("C977217C-46FA-4380-AFDC-96E8084F5AD0");
+            _sprint1Id = Guid.Parse("0869B2F0-B7FE-4F2C-8EC4-E36933CC9954");
+            _sprint2Id = Guid.Parse("B3D097E6-79A8-4668-A281-5BC2091A4923");
+            _sprint3Id = Guid.Parse("872DA25A-23A9-4B89-A95B-0A7EAEEF0E6D");
+            _jiraIssue2Id = Guid.Parse("98A0D079-2922-4F71-945C-02209BB19C67");
+            _jiraIssue4Id = Guid.Parse("CDD37CF8-D36D-4774-8344-5804B9A40049");
+            
 
             var uow = new UnitOfWork(_factory.CreateDbContext());
-            var developer = new Developer()
+            var mashini = new Developer()
             {
                 Id = _mashinisId,
                 FirstName = "Heritier",
@@ -29,7 +45,7 @@ namespace ManagerHelperTests.ViewModels
                 DateModifiedUtc = DateTime.Parse("04-12-2023 11:35:21"),
                 TimeZone = "Eastern Standard Time"
             };
-            uow.DeveloperRepository.Insert(developer);
+            uow.DeveloperRepository.Insert(mashini);
 
             var glen = new Developer()
             {
@@ -72,9 +88,10 @@ namespace ManagerHelperTests.ViewModels
             uow.QuarterRepository.Insert(quarter2);
             uow.Save();
 
+
             var sprint1 = new Sprint()
             {
-                Id = Guid.Parse("0869B2F0-B7FE-4F2C-8EC4-E36933CC9954"),
+                Id = _sprint1Id,
                 Name = "2022-AUG-2",
                 StartDate = DateTime.Parse("2022-08-15 00:00:00"),
                 EndDate = DateTime.Parse("2022-08-29 00:00:00"),
@@ -83,7 +100,7 @@ namespace ManagerHelperTests.ViewModels
 
             var sprint2 = new Sprint()
             {
-                Id = Guid.Parse("B3D097E6-79A8-4668-A281-5BC2091A4923"), 
+                Id = _sprint2Id, 
                 Name = "2022-AUG-3",
                 StartDate = DateTime.Parse("2022-08-26 00:00:00"),
                 EndDate = DateTime.Parse("2022-09-09 00:00:00"),
@@ -92,7 +109,7 @@ namespace ManagerHelperTests.ViewModels
 
             var sprint3 = new Sprint()
             {
-                Id = Guid.Parse("872DA25A-23A9-4B89-A95B-0A7EAEEF0E6D"),	
+                Id = _sprint3Id,	
                 Name = "2022-SEPT-1",
                 StartDate = DateTime.Parse("2022-09-09 00:00:00"),
                 EndDate = DateTime.Parse("2022-09-23 00:00:00"),
@@ -128,7 +145,7 @@ namespace ManagerHelperTests.ViewModels
             };
             var jiraIssue2 = new JiraIssue()
             {
-                Id = Guid.Parse("98A0D079-2922-4F71-945C-02209BB19C67"),
+                Id = _jiraIssue2Id,
                 Number = "11569",
                 StoryPoints = 8,
                 IsRegressionBug = false,
@@ -150,7 +167,7 @@ namespace ManagerHelperTests.ViewModels
             };
             var jiraIssue4 = new JiraIssue()
             {
-                Id = Guid.Parse("CDD37CF8-D36D-4774-8344-5804B9A40049"),
+                Id = _jiraIssue4Id,
                 Number = "12048",
                 StoryPoints = 5,
                 IsRegressionBug = false,
@@ -176,8 +193,8 @@ namespace ManagerHelperTests.ViewModels
                 DateCreatedUtc = DateTime.Parse("2023-05-25 14:20:33.810352"),	
                 DateModifiedUtc = DateTime.Parse("2023-05-25 14:20:33.8103521"),
                 TimeZone = "Eastern Standard Time",
-                SprintId = Guid.Parse("0869B2F0-B7FE-4F2C-8EC4-E36933CC9954"),	
-                JiraIssueId = Guid.Parse("98A0D079-2922-4F71-945C-02209BB19C67"),
+                SprintId = _sprint1Id,	
+                JiraIssueId = _jiraIssue2Id,
                 DeveloperId = _mashinisId
             };
 
@@ -190,8 +207,8 @@ namespace ManagerHelperTests.ViewModels
                 DateCreatedUtc = DateTime.Parse("2023 -05-25 14:20:33.9203918"),
                 DateModifiedUtc = DateTime.Parse("2023-05-25 14:20:33.9203918"),
                 TimeZone = "Eastern Standard Time",
-                SprintId = Guid.Parse("872DA25A-23A9-4B89-A95B-0A7EAEEF0E6D"),
-                JiraIssueId = Guid.Parse("CDD37CF8-D36D-4774-8344-5804B9A40049"),
+                SprintId = _sprint3Id,
+                JiraIssueId = _jiraIssue4Id,
                 DeveloperId = _mashinisId
             };
 
@@ -204,7 +221,7 @@ namespace ManagerHelperTests.ViewModels
                 DateCreatedUtc = DateTime.Parse("2023 -05-25 14:20:33.8720033"),
                 DateModifiedUtc = DateTime.Parse("2023-05-25 14:20:33.8720033"),
                 TimeZone = "Eastern Standard Time",
-                SprintId = Guid.Parse("B3D097E6-79A8-4668-A281-5BC2091A4923"),
+                SprintId = _sprint2Id,
                 JiraIssueId = Guid.Parse("B17DCE57-F6F8-4FE0-AD2F-C98C4D01E1D7"),
                 DeveloperId = _mashinisId
             };
