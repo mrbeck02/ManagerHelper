@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ManagerHelper.Data.Entities
 {
+    /// <summary>
+    /// This represents a quarter in the year.  It helps determine the quarterly statistics.
+    /// </summary>
     public class Quarter
     {
         [Key]

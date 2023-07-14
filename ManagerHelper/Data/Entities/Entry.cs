@@ -1,9 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ManagerHelper.Data.Entities
 {
+    /// <summary>
+    /// An entry is a single day entry for a commitment.  It's the status a jira was reported in for that day.
+    /// </summary>
     public class Entry
     {
         [Key]   

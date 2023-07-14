@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ManagerHelper.Data.Entities
 {
+    /// <summary>
+    /// This represents the developer that did the work in a commitment.  This helps with gethering
+    /// developer metrics.
+    /// </summary>
     public class Developer
     {
         [Key]

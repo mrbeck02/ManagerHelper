@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ManagerHelper.Data.Entities
 {
+    /// <summary>
+    /// This represents a jira issue, regardless of whether it was committed to or not.
+    /// </summary>
     public class JiraIssue
     {
         [Key]

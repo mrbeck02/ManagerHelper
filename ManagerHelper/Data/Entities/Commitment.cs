@@ -1,9 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ManagerHelper.Data.Entities
 {
+    /// <summary>
+    /// This represents a Jira issue that was committed to for a sprint.
+    /// </summary>
     public class Commitment
     {
         [Key]

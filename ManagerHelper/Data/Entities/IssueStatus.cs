@@ -8,6 +8,9 @@ namespace ManagerHelper.Data.Entities
         open = 1, todo, inprogress, readyfortest, intest, readyforrelease, done, unknown
     };
 
+    /// <summary>
+    /// This represents the allowed status value for each entry
+    /// </summary>
     public class IssueStatus
     {
         [Key]

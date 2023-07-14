@@ -7,6 +7,9 @@ namespace ManagerHelper.Data.Entities
         CARA = 1, CM, CRT, EPMM, PPS, PFS, SMARTonFHIR, AvailabilityAPI, ReferralAPI, Cognito, Launcher, Dynatrace, Other, CRAPI, Research, JI
     };
 
+    /// <summary>
+    /// This represents the product that a Jira issue affects.
+    /// </summary>
     public class Product
     {
         [Key]

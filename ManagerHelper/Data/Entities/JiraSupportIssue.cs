@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ManagerHelper.Data.Entities
 {
+    /// <summary>
+    /// This will represent a jira support issue that was completed by a user.
+    /// TODO: Remove this and add a Jira issue type so we can see if it's a support issue or whatever.
+    /// </summary>
     public class JiraSupportIssue
     {
         [Key]

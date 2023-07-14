@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ManagerHelper.Data.Entities
 {
+    /// <summary>
+    /// This represents a sprint which a commitment was made in.  It can be used for other 
+    /// purposes too.
+    /// </summary>
     public class Sprint
     {
         [Key]
