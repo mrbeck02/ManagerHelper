@@ -256,7 +256,7 @@ namespace ManagerHelperTests.ViewModels
         {
             var alertServiceMock = new Mock<IAlertService>();
 
-            var viewModel = new TeamVelocityViewModel(_factory, alertServiceMock.Object);
+            var viewModel = new TeamVelocityViewModel(_factory, _mashinisId, alertServiceMock.Object);
 
             // Should have 2 quarters.  Each should have 2 sprints.
             // Sprint 1 should have: whatever...

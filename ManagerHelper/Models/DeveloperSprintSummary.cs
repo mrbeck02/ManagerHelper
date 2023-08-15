@@ -2,6 +2,9 @@
 
 namespace ManagerHelper.Models
 {
+    /// <summary>
+    /// This is the summary information for a all the commitments in a single sprint.
+    /// </summary>
     public class DeveloperSprintSummary
     {
         public bool CountSprintValues { get; set; }
@@ -10,8 +13,9 @@ namespace ManagerHelper.Models
         public float CompletionPercentage { get; set; }
         public int RolloverIssueCount { get; set; }
         public int SupportIssueCount { get; set; }
+        public string QuarterName { get; private set; }
 
-        public List<JiraIssue> SprintIssues { get; set; }
+        public List<JiraIssue> SprintIssues { get; set; } = new List<JiraIssue>();
 
         public DeveloperSprintSummary(List<Commitment> commitments)
         {
@@ -26,6 +30,9 @@ namespace ManagerHelper.Models
 
             RolloverIssueCount = commitments.Sum(c => c.IncludeInData && !c.DidComplete ? 1 : 0);
             CountSprintValues = commitments.TrueForAll(c => c.IncludeInData);
+
+            SprintIssues = commitments.Select(c => c.JiraIssue).ToList();
+
         }
     }
 }

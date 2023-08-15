@@ -1,5 +1,9 @@
 ﻿namespace ManagerHelper.Models
 {
+    /// <summary>
+    /// This represents a group of sprints for a developer.
+    /// For now, they're grouped by quarter.
+    /// </summary>
     public class DeveloperSprintSummaryGroup : List<DeveloperSprintSummary>
     {
         public string Name { get; private set; }
