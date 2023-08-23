@@ -33,6 +33,8 @@ namespace ManagerHelper.Models
 
             SprintIssues = commitments.Select(c => c.JiraIssue).ToList();
 
+            // Assuming all commitments are from the same sprint and the same quarter
+            QuarterName = commitments[0]?.Sprint?.Quarter.Name;
         }
     }
 }

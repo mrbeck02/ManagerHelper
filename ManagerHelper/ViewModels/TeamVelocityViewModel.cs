@@ -40,28 +40,12 @@ namespace ManagerHelper.ViewModels
             // Get all commitments
             var commitments = unitOfWork.CommitmentRepository.Get(c => c.DeveloperId == developer.Id, null, "JiraIssue,Sprint,Sprint.Quarter");
 
-            // Group commitments into sprint items for display
-            var sprintGroups = commitments.GroupBy(c => c.SprintId);
+            // Group the commitments by sprint and place them into sprint summary items
+            var sprintSummaries = commitments.GroupBy(c => c.SprintId).Select(c => new DeveloperSprintSummary(c.ToList()));
 
-            // loop throgh each sprint group and create a sprint summary
-            var sprintSummaries = new List<DeveloperSprintSummary>();
+            // Group the sprints by quarter and place them into quarter summaries.
 
-            foreach (var sprintCommitmentList in sprintGroups)
-            {
-                sprintSummaries.Add(new DeveloperSprintSummary(sprintCommitmentList.ToList()));
-            }
-
-            // Group sprint summaries by 
-
-            // Add the sprint summaries to the appropriate quarters
-            // We have a bunch of sprint summaries that need to be grouped by quarters and sorted by date.  Quarters from latest to oldest
-
-
-            //foreach (var sprintSummary in sprintSummaries)
-            //{
-            //    if (Groups.Any(g => string.Compare(g.Name, sprintSummary.Quarter))
-            //}
-            //Groups.Add(new DeveloperSprintSummaryGroup())
+            // We'll also have to sort them.
 
         }
     }
