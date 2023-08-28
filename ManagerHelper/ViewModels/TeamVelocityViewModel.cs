@@ -1,7 +1,6 @@
 ﻿using ManagerHelper.DAL;
 using ManagerHelper.Data;
 using ManagerHelper.Models;
-using ManagerHelper.Resources;
 using ManagerHelper.ViewModels.Support;
 using System.Collections.ObjectModel;
 
@@ -43,10 +42,8 @@ namespace ManagerHelper.ViewModels
             // Group the commitments by sprint and place them into sprint summary items
             var sprintSummaries = commitments.GroupBy(c => c.SprintId).Select(c => new DeveloperSprintSummary(c.ToList()));
 
-            // Group the sprints by quarter and place them into quarter summaries.
-
-            // We'll also have to sort them.
-
+            // Sort the sprints by date, group the sprints by quarter and place them into quarter summaries.
+            Groups = new ObservableCollection<DeveloperSprintSummaryGroup>(sprintSummaries.OrderBy(s => s.SprintStart).GroupBy(s => s.QuarterName).Select(s => new DeveloperSprintSummaryGroup(s.ToList())));
         }
     }
 }

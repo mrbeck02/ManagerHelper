@@ -13,6 +13,8 @@ namespace ManagerHelper.Models
         public float CompletionPercentage { get; set; }
         public int RolloverIssueCount { get; set; }
         public int SupportIssueCount { get; set; }
+
+        public DateTime? SprintStart { get; private set; }
         public string QuarterName { get; private set; }
 
         public List<JiraIssue> SprintIssues { get; set; } = new List<JiraIssue>();
@@ -35,6 +37,7 @@ namespace ManagerHelper.Models
 
             // Assuming all commitments are from the same sprint and the same quarter
             QuarterName = commitments[0]?.Sprint?.Quarter.Name;
+            SprintStart = commitments[0]?.Sprint.StartDate;
         }
     }
 }

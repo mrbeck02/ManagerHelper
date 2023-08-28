@@ -1,4 +1,6 @@
-﻿namespace ManagerHelper.Models
+﻿using ManagerHelper.Extensions;
+
+namespace ManagerHelper.Models
 {
     /// <summary>
     /// This represents a group of sprints for a developer.
@@ -6,16 +8,21 @@
     /// </summary>
     public class DeveloperSprintSummaryGroup : List<DeveloperSprintSummary>
     {
-        public string Name { get; private set; }
+        public string Name { get; private set; } = "Unknown";
+        public DateTime? QuarterStart { get; private set; }
 
         public DeveloperSprintSummaryGroup(string name) : base(new List<DeveloperSprintSummary>())
         {
             Name = name;
         }
 
-        public DeveloperSprintSummaryGroup(string name, List<DeveloperSprintSummary> list) : base(list)
+        public DeveloperSprintSummaryGroup(List<DeveloperSprintSummary> list) : base(list)
         {
-            Name = name;
+            if (!list.IsNullOrEmpty())
+            {
+                Name = list[0].QuarterName;
+                QuarterStart = list.OrderBy(s => s.SprintStart).First().SprintStart;
+            }
         }
 
         public override string ToString()
