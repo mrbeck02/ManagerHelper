@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ManagerHelper.ViewModels
+﻿namespace ManagerHelper.ViewModels
 {
     public interface ITeamVelocityViewModel
     {
+        public void SetDeveloperId(Guid developerId);
     }
 }

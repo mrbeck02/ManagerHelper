@@ -13,14 +13,17 @@ namespace ManagerHelper.ViewModels
 
         public ObservableCollection<DeveloperSprintSummaryGroup> Groups { get; private set; } = new ObservableCollection<DeveloperSprintSummaryGroup>();
 
-        public TeamVelocityViewModel(ISqliteDataContextFactory<DataContext> contextFactory, Guid developerId,
+        public TeamVelocityViewModel(ISqliteDataContextFactory<DataContext> contextFactory,
                                     IAlertService alertService)
         {
             _alertService = alertService;
             _contextFactory = contextFactory;
             // The following line shouldn't be necessary.   Specify the path before this point.
             //_contextFactory.DbPath = Preferences.Default.Get(PreferenceKey.db_location.ToString(), "");
+        }
 
+        public void SetDeveloperId(Guid developerId)
+        {
             createDeveloperSprintSummaryGroups(new UnitOfWork(_contextFactory.CreateDbContext()), developerId);
         }
 

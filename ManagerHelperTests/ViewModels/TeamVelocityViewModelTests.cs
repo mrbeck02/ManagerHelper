@@ -256,11 +256,10 @@ namespace ManagerHelperTests.ViewModels
         {
             var alertServiceMock = new Mock<IAlertService>();
 
-            var viewModel = new TeamVelocityViewModel(_factory, _mashinisId, alertServiceMock.Object);
+            var viewModel = new TeamVelocityViewModel(_factory, alertServiceMock.Object);
 
+            viewModel.SetDeveloperId(_mashinisId);
             // Should have 2 quarters.  Each should have 2 sprints.
-            // Sprint 1 should have: whatever...
-            // select * from commitments where JiraIssueId in  ("98A0D079-2922-4F71-945C-02209BB19C67", "CDD37CF8-D36D-4774-8344-5804B9A40049", "B17DCE57-F6F8-4FE0-AD2F-C98C4D01E1D7", "5541EE44-52C8-48C9-A28F-F649E854ABA5")
             Assert.True(viewModel.Groups.Count == 2);
             Assert.True(viewModel.Groups.Sum(g => g.Count) == 4);
         }

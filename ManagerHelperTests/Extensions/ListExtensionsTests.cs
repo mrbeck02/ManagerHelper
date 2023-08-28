@@ -7,8 +7,10 @@ public class ListExtensionsTests
     [Fact]
     public void IsNullOrEmpty_WhenNull_IsTrue()
     {
+#pragma warning disable CS8600
         List<string> list = null;
         Assert.True(list.IsNullOrEmpty());
+#pragma warning restore CS8600
     }
 
     [Fact]
